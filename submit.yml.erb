@@ -1,0 +1,11 @@
+batch_connect:
+  template: "basic"
+
+script:
+  native:
+    - "-c"
+    - "<%= num_cores %>"
+    - "--mem"
+    - "<%= num_mem %>GB"
+    - "-p"
+    - "<%= partition %>"

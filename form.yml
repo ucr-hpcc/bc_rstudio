@@ -1,0 +1,35 @@
+cluster: "hpcc"
+
+attributes:
+  modules: "rstudio-server/"
+  bc_account: null
+  bc_num_slots: 1
+  num_cores:
+    widget: "number_field"
+    label: "Number of Cores"
+    value: 4
+    min: 1
+    id: 'num_cores'
+  num_mem:
+    widget: "number_field"
+    label: "Memory in GB"
+    value: "8"
+    min: 1
+    id: 'num_mem'
+  bc_num_hours:
+    min: 1
+    max: 24
+  partition:
+    widget: select
+    label: "Partition"
+    options:
+      - "short"
+      - "epyc"
+      - "intel"
+      - "batch"
+form:
+  - modules
+  - num_cores
+  - num_mem
+  - bc_num_hours
+  - partition

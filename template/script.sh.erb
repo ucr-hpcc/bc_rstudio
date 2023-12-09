@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+module load <%= context.modules %>
+
+# RSTUDIO_PASSWORD and $port set in before.sh.erb
+
+export RSTUDIO_CONFIG_DIR=$PWD      # system config
+export RSTUDIO_DATA_HOME=$PWD       # per-session storage
+export RSTUDIO_AUTH="$PWD/bin/auth"
+
+cat <<-EOF > $RSTUDIO_CONFIG_DIR/rserver.conf
+server-user=$USER
+www-port=$port
+auth-none=0
+auth-pam-helper-path=$RSTUDIO_AUTH
+auth-encrypt-password=0
+auth-timeout-minutes=0
+database-config-file=$RSTUDIO_CONFIG_DIR/database.conf
+server-data-dir=$SCRATCH
+server-app-armor-enabled=0
+EOF
+
+cat <<-EOF > $RSTUDIO_CONFIG_DIR/rsession.conf
+session-timeout-minutes=0
+session-timeout-suspend=0
+session-save-action-default=no
+session-quit-child-processes-on-exit=1
+r-restore-workspace=0
+session-default-working-dir=$HOME
+EOF
+cat <<-EOF > $RSTUDIO_CONFIG_DIR/logging.conf
+[*]
+log-level=info
+logger-type=file
+log-dir=$RSTUDIO_CONFIG_DIR/sessions
+EOF
+cat <<-EOF > $RSTUDIO_CONFIG_DIR/database.conf
+provider=sqlite
+directory=$RSTUDIO_CONFIG_DIR
+pool-size=$SLURM_CPUS_ON_NODE
+EOF
+mkdir $RSTUDIO_CONFIG_DIR/sessions
+
+rserver 2>&1
+
