@@ -7,3 +7,8 @@ port=$(find_port $host)
 # Define a password and export it for RStudio authentication
 password=$(create_passwd 16)
 export RSTUDIO_PASSWORD=$password
+
+<%- require 'securerandom'
+    csrftoken = SecureRandom.uuid -%>
+export csrftoken=<%= csrftoken %>
+
