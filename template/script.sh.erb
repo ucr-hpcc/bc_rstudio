@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
+module swap R/<%= context.r_version %>
 module load <%= context.modules %>
+
+module list
 
 # RSTUDIO_PASSWORD and $port set in before.sh.erb
 
