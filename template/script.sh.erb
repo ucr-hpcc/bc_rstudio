@@ -11,6 +11,32 @@ export RSTUDIO_CONFIG_DIR=$PWD      # system config
 export RSTUDIO_DATA_HOME=$PWD       # per-session storage
 export RSTUDIO_AUTH="$PWD/bin/auth"
 
+
+export RSESSION_WRAPPER_FILE="$PWD/rsession.sh"
+(
+umask 077
+
+# Header
+cat <<-EOF > $RSESSION_WRAPPER_FILE
+#!/usr/bin/env bash
+
+EOF
+
+# Propagate Slurm Variables
+for VAR in $(env | grep "^SLURM_"); do
+  echo "export $VAR" >> $RSESSION_WRAPPER_FILE
+done
+
+# Footer
+cat <<-EOF >> $RSESSION_WRAPPER_FILE
+echo "Launching rsession..."
+exec rsession "\${@}"
+
+EOF
+)
+chmod 700 $RSESSION_WRAPPER_FILE
+
+
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/rserver.conf
 server-user=$USER
 www-port=$port
@@ -18,6 +44,7 @@ auth-none=0
 auth-pam-helper-path=$RSTUDIO_AUTH
 auth-encrypt-password=0
 auth-timeout-minutes=0
+rsession-path=$RSESSION_WRAPPER_FILE
 database-config-file=$RSTUDIO_CONFIG_DIR/database.conf
 server-data-dir=$SCRATCH
 server-app-armor-enabled=0
@@ -32,17 +59,20 @@ r-restore-workspace=0
 session-default-working-dir=$HOME
 copilot-enabled=1
 EOF
+
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/logging.conf
 [*]
 log-level=info
 logger-type=file
 log-dir=$RSTUDIO_CONFIG_DIR/sessions
 EOF
+
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/database.conf
 provider=sqlite
 directory=$RSTUDIO_CONFIG_DIR
 pool-size=$SLURM_CPUS_ON_NODE
 EOF
+
 mkdir $RSTUDIO_CONFIG_DIR/sessions
 
 rserver 2>&1
