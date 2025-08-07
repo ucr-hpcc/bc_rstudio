@@ -20,6 +20,8 @@ umask 077
 cat <<-EOF > $RSESSION_WRAPPER_FILE
 #!/usr/bin/env bash
 
+ulimit -c unlimited
+
 EOF
 
 # Propagate Slurm Variables
