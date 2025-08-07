@@ -62,9 +62,10 @@ EOF
 
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/logging.conf
 [*]
-log-level=info
+log-level=debug
 logger-type=file
 log-dir=$RSTUDIO_CONFIG_DIR/sessions
+log-file-include-pid=1
 EOF
 
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/database.conf
