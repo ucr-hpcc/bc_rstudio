@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 module swap R/<%= context.r_version %>
+module load <%= context.extra_modules %>
 module load <%= context.modules %>
 
 module list
