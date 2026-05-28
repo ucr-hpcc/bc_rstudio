@@ -13,7 +13,7 @@ setCookie("rs-csrf-token=", "<%= csrftoken %>", 7)
   <input type="hidden" name="username" value="<%= ENV["USER"] %>">
   <input type="hidden" name="password" value="<%= password %>">
   <input type="hidden" name="staySignedIn" value="1">
-  <input type="hidden" name="appUri" value="">
+  <input type="hidden" name="appUri" value="../../../">
   <input type="hidden" name="csrf-token" value="<%= csrftoken %>">
   <input type="hidden" name="rs-csrf-token" value="<%= csrftoken %>">
   <button class="btn btn-primary" type="submit">

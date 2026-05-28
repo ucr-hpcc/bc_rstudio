@@ -43,6 +43,7 @@ chmod 700 $RSESSION_WRAPPER_FILE
 cat <<-EOF > $RSTUDIO_CONFIG_DIR/rserver.conf
 server-user=$USER
 www-port=$port
+www-root-path=/rnode/$host/$port/
 auth-none=0
 auth-pam-helper-path=$RSTUDIO_AUTH
 auth-encrypt-password=0
